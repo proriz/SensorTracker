@@ -11,20 +11,28 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Instalar dependencias sistema
+      - name: Sistema
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y \
-            git zip unzip \
-            openjdk-17-jdk \
-            autoconf libtool pkg-config cmake \
-            libffi-dev libssl-dev
+          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config cmake libffi-dev libssl-dev
 
-      - name: Instalar Python deps
+      - name: Python deps
         run: pip install buildozer cython==0.29.33 kivy plyer
 
-      - name: Aceitar licencas Android SDK
+      - name: Extrair projeto
+        run: unzip -o *.zip
+
+      - name: Aceitar licencas
         run: |
           mkdir -p $HOME/.android
           touch $HOME/.android/repositories.cfg
           yes | buildozer android debug || true
+
+      - name: Build final
+        run: yes | buildozer android debug 2>&1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SensorTracker-APK
+          path: bin/*.apk
+          retention-days: 7
