@@ -22,12 +22,26 @@ jobs:
       - name: Extrair projeto
         run: unzip -o *.zip
 
-      - name: Corrigir spec
+      - name: Gerar spec limpo
         run: |
-          sed -i 's/kivy==2.3.0/kivy/g' buildozer.spec
-          sed -i '/android.add_compile_options/d' buildozer.spec
-          sed -i '/android.gradle_dependencies/d' buildozer.spec
-          cat buildozer.spec | grep requirements
+          cat > buildozer.spec << 'EOF'
+          [app]
+          title = SensorTracker
+          package.name = sensortracker
+          package.domain = com.seudominio
+          source.dir = .
+          source.include_exts = py,kv,png,jpg,ttf
+          version = 1.0.0
+          requirements = python3,kivy,plyer
+          orientation = portrait
+          fullscreen = 0
+          android.minapi = 21
+          android.targetapi = 33
+          android.archs = arm64-v8a
+          android.permissions = ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION
+          [buildozer]
+          log_level = 2
+          EOF
 
       - name: Aceitar licencas
         run: |
