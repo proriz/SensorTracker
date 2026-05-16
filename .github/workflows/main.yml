@@ -23,7 +23,11 @@ jobs:
         run: unzip -o *.zip
 
       - name: Corrigir spec
-        run: sed -i 's/kivy==2.3.0/kivy/g' buildozer.spec
+        run: |
+          sed -i 's/kivy==2.3.0/kivy/g' buildozer.spec
+          sed -i '/android.add_compile_options/d' buildozer.spec
+          sed -i '/android.gradle_dependencies/d' buildozer.spec
+          cat buildozer.spec | grep requirements
 
       - name: Aceitar licencas
         run: |
@@ -34,7 +38,8 @@ jobs:
       - name: Build final
         run: buildozer android debug 2>&1
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: SensorTracker-APK
           path: bin/*.apk
