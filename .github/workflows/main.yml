@@ -4,8 +4,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    env:
-      ACCEPT_SDK_DOWNLOAD: 1
     steps:
       - uses: actions/checkout@v4
 
@@ -23,6 +21,9 @@ jobs:
 
       - name: Extrair projeto
         run: unzip -o *.zip
+
+      - name: Corrigir spec
+        run: sed -i 's/kivy==2.3.0/kivy/g' buildozer.spec
 
       - name: Aceitar licencas
         run: |
