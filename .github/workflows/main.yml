@@ -4,6 +4,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    env:
+      ACCEPT_SDK_DOWNLOAD: 1
     steps:
       - uses: actions/checkout@v4
 
@@ -29,7 +31,7 @@ jobs:
           yes | buildozer android debug || true
 
       - name: Build final
-        run: yes | buildozer android debug 2>&1
+        run: buildozer android debug 2>&1
 
       - uses: actions/upload-artifact@v4
         with:
